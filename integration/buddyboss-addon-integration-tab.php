@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.1.5
  */
-class MYPLUGIN_BuddyBoss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
+class ACTIVITYPA_BuddyBoss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function initialize() {
 		$this->tab_order       = 60;
 	}
@@ -27,12 +27,12 @@ class MYPLUGIN_BuddyBoss_Admin_Integration_Tab extends BP_Admin_Integration_tab 
 	 */
 	public function register_fields() {
 
-		$sections = MYPLUGIN_get_settings_sections();
+		$sections = ACTIVITYPA_get_settings_sections();
 
 		foreach ( (array) $sections as $section_id => $section ) {
 
 			// Only add section and fields if section has fields
-			$fields = MYPLUGIN_get_settings_fields_for_section( $section_id );
+			$fields = ACTIVITYPA_get_settings_fields_for_section( $section_id );
 
 			if ( empty( $fields ) ) {
 				continue;

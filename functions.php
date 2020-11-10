@@ -2,82 +2,82 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! function_exists( 'MYPLUGIN_admin_enqueue_script' ) ) {
-	function MYPLUGIN_admin_enqueue_script() {
+if ( ! function_exists( 'ACTIVITYPA_admin_enqueue_script' ) ) {
+	function ACTIVITYPA_admin_enqueue_script() {
 		wp_enqueue_style( 'buddyboss-addon-admin-css', plugin_dir_url( __FILE__ ) . 'style.css' );
 	}
 
-	add_action( 'admin_enqueue_scripts', 'MYPLUGIN_admin_enqueue_script' );
+	add_action( 'admin_enqueue_scripts', 'ACTIVITYPA_admin_enqueue_script' );
 }
 
-if ( ! function_exists( 'MYPLUGIN_get_settings_sections' ) ) {
-	function MYPLUGIN_get_settings_sections() {
+if ( ! function_exists( 'ACTIVITYPA_get_settings_sections' ) ) {
+	function ACTIVITYPA_get_settings_sections() {
 
 		$settings = array(
-			'MYPLUGIN_settings_section' => array(
+			'ACTIVITYPA_settings_section' => array(
 				'page'  => 'addon',
-				'title' => __( 'Add-on Settings', 'buddyboss-platform-addon' ),
+				'title' => __( 'Activity Popup Settings', 'activity-popup-addon' ),
 			),
 		);
 
-		return (array) apply_filters( 'MYPLUGIN_get_settings_sections', $settings );
+		return (array) apply_filters( 'ACTIVITYPA_get_settings_sections', $settings );
 	}
 }
 
-if ( ! function_exists( 'MYPLUGIN_get_settings_fields_for_section' ) ) {
-	function MYPLUGIN_get_settings_fields_for_section( $section_id = '' ) {
+if ( ! function_exists( 'ACTIVITYPA_get_settings_fields_for_section' ) ) {
+	function ACTIVITYPA_get_settings_fields_for_section( $section_id = '' ) {
 
 		// Bail if section is empty
 		if ( empty( $section_id ) ) {
 			return false;
 		}
 
-		$fields = MYPLUGIN_get_settings_fields();
+		$fields = ACTIVITYPA_get_settings_fields();
 		$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
 
-		return (array) apply_filters( 'MYPLUGIN_get_settings_fields_for_section', $retval, $section_id );
+		return (array) apply_filters( 'ACTIVITYPA_get_settings_fields_for_section', $retval, $section_id );
 	}
 }
 
-if ( ! function_exists( 'MYPLUGIN_get_settings_fields' ) ) {
-	function MYPLUGIN_get_settings_fields() {
+if ( ! function_exists( 'ACTIVITYPA_get_settings_fields' ) ) {
+	function ACTIVITYPA_get_settings_fields() {
 
 		$fields = array();
 
-		$fields['MYPLUGIN_settings_section'] = array(
+		$fields['ACTIVITYPA_settings_section'] = array(
 
-			'MYPLUGIN_field' => array(
-				'title'             => __( 'Add-on Field', 'buddyboss-platform-addon' ),
-				'callback'          => 'MYPLUGIN_settings_callback_field',
+			'ACTIVITYPA_field' => array(
+				'title'             => __( 'Activity popup option', 'activity-popup-addon' ),
+				'callback'          => 'ACTIVITYPA_settings_callback_field',
 				'sanitize_callback' => 'absint',
 				'args'              => array(),
 			),
 
 		);
 
-		return (array) apply_filters( 'MYPLUGIN_get_settings_fields', $fields );
+		return (array) apply_filters( 'ACTIVITYPA_get_settings_fields', $fields );
 	}
 }
 
-if ( ! function_exists( 'MYPLUGIN_settings_callback_field' ) ) {
-	function MYPLUGIN_settings_callback_field() {
+if ( ! function_exists( 'ACTIVITYPA_settings_callback_field' ) ) {
+	function ACTIVITYPA_settings_callback_field() {
 		?>
-        <input name="MYPLUGIN_field"
-               id="MYPLUGIN_field"
+        <input name="ACTIVITYPA_field"
+               id="ACTIVITYPA_field"
                type="checkbox"
                value="1"
-			<?php checked( MYPLUGIN_is_addon_field_enabled() ); ?>
+			<?php checked( ACTIVITYPA_is_addon_field_enabled() ); ?>
         />
-        <label for="MYPLUGIN_field">
-			<?php _e( 'Enable this option', 'buddyboss-platform-addon' ); ?>
+        <label for="ACTIVITYPA_field">
+			<?php _e( 'Enable this option', 'activity-popup-addon' ); ?>
         </label>
 		<?php
 	}
 }
 
-if ( ! function_exists( 'MYPLUGIN_is_addon_field_enabled' ) ) {
-	function MYPLUGIN_is_addon_field_enabled( $default = 1 ) {
-		return (bool) apply_filters( 'MYPLUGIN_is_addon_field_enabled', (bool) get_option( 'MYPLUGIN_field', $default ) );
+if ( ! function_exists( 'ACTIVITYPA_is_addon_field_enabled' ) ) {
+	function ACTIVITYPA_is_addon_field_enabled( $default = 1 ) {
+		return (bool) apply_filters( 'ACTIVITYPA_is_addon_field_enabled', (bool) get_option( 'ACTIVITYPA_field', $default ) );
 	}
 }
 
@@ -95,31 +95,31 @@ if ( ! function_exists( 'MYPLUGIN_is_addon_field_enabled' ) ) {
  * bp_admin_setting_invites_register_fields
  * bp_admin_setting_search_register_fields
  */
-if ( ! function_exists( 'MYPLUGIN_bp_admin_setting_general_register_fields' ) ) {
-    function MYPLUGIN_bp_admin_setting_general_register_fields( $setting ) {
+if ( ! function_exists( 'ACTIVITYPA_bp_admin_setting_general_register_fields' ) ) {
+    function ACTIVITYPA_bp_admin_setting_general_register_fields( $setting ) {
 	    // Main General Settings Section
-	    $setting->add_section( 'MYPLUGIN_addon', __( 'Add-on Settings', 'buddyboss-platform-addon' ) );
+	    $setting->add_section( 'ACTIVITYPA_addon', __( 'Popup Settings', 'activity-popup-addon' ) );
 
 	    $args          = array();
-	    $setting->add_field( 'bp-enable-my-addon', __( 'My Field', 'buddyboss-platform-addon' ), 'MYPLUGIN_admin_general_setting_callback_my_addon', 'intval', $args );
+	    $setting->add_field( 'bp-enable-my-addon', __( 'URL Field', 'activity-popup-addon' ), 'ACTIVITYPA_admin_general_setting_callback_my_addon', 'intval', $args );
     }
 
-	add_action( 'bp_admin_setting_general_register_fields', 'MYPLUGIN_bp_admin_setting_general_register_fields' );
+	add_action( 'bp_admin_setting_activity_register_fields', 'ACTIVITYPA_bp_admin_setting_general_register_fields' );
 }
 
-if ( ! function_exists( 'MYPLUGIN_admin_general_setting_callback_my_addon' ) ) {
-	function MYPLUGIN_admin_general_setting_callback_my_addon() {
+if ( ! function_exists( 'ACTIVITYPA_admin_general_setting_callback_my_addon' ) ) {
+	function ACTIVITYPA_admin_general_setting_callback_my_addon() {
 		?>
         <input id="bp-enable-my-addon" name="bp-enable-my-addon" type="checkbox"
-               value="1" <?php checked( MYPLUGIN_enable_my_addon() ); ?> />
-        <label for="bp-enable-my-addon"><?php _e( 'Enable my option', 'buddyboss-platform-addon' ); ?></label>
+               value="1" <?php checked( ACTIVITYPA_enable_my_addon() ); ?> />
+        <label for="bp-enable-my-addon"><?php _e( 'Enable my option', 'activity-popup-addon' ); ?></label>
 		<?php
 	}
 }
 
-if ( ! function_exists( 'MYPLUGIN_enable_my_addon' ) ) {
-	function MYPLUGIN_enable_my_addon( $default = false ) {
-		return (bool) apply_filters( 'MYPLUGIN_enable_my_addon', (bool) bp_get_option( 'bp-enable-my-addon', $default ) );
+if ( ! function_exists( 'ACTIVITYPA_enable_my_addon' ) ) {
+	function ACTIVITYPA_enable_my_addon( $default = false ) {
+		return (bool) apply_filters( 'ACTIVITYPA_enable_my_addon', (bool) bp_get_option( 'bp-enable-my-addon', $default ) );
 	}
 }
 
@@ -129,8 +129,8 @@ if ( ! function_exists( 'MYPLUGIN_enable_my_addon' ) ) {
 /**
  * Set up the my plugin integration.
  */
-function MYPLUGIN_register_integration() {
+function ACTIVITYPA_register_integration() {
 	require_once dirname( __FILE__ ) . '/integration/buddyboss-integration.php';
-	buddypress()->integrations['addon'] = new MYPLUGIN_BuddyBoss_Integration();
+	buddypress()->integrations['addon'] = new ACTIVITYPA_BuddyBoss_Integration();
 }
-add_action( 'bp_setup_integrations', 'MYPLUGIN_register_integration' );
+add_action( 'bp_setup_integrations', 'ACTIVITYPA_register_integration' );

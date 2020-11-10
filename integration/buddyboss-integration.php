@@ -13,13 +13,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.1.5
  */
-class MYPLUGIN_BuddyBoss_Integration extends BP_Integration {
+class ACTIVITYPA_BuddyBoss_Integration extends BP_Integration {
 
 	public function __construct() {
 		$this->start(
-			'add-on',
-			__( 'Add-on', 'buddyboss-platform-addon' ),
-			'add-on',
+			'activitypa',
+			__( 'Activity Pop-up', 'activity-popup-addon' ),
+			'activitypa',
 			array(
 				'required_plugin' => array(),
 			)
@@ -37,12 +37,12 @@ class MYPLUGIN_BuddyBoss_Integration extends BP_Integration {
 
 		require_once 'buddyboss-addon-integration-tab.php';
 
-		new MYPLUGIN_BuddyBoss_Admin_Integration_Tab(
+		new ACTIVITYPA_BuddyBoss_Admin_Integration_Tab(
 			"bp-{$this->id}",
 			$this->name,
 			array(
-				'root_path'       => MYPLUGIN_BB_ADDON_PLUGIN_PATH . '/integration',
-				'root_url'        => MYPLUGIN_BB_ADDON_PLUGIN_URL . '/integration',
+				'root_path'       => ACTIVITYPA_BB_ADDON_PLUGIN_PATH . '/integration',
+				'root_url'        => ACTIVITYPA_BB_ADDON_PLUGIN_URL . '/integration',
 				'required_plugin' => $this->required_plugin,
 			)
 		);
@@ -51,7 +51,7 @@ class MYPLUGIN_BuddyBoss_Integration extends BP_Integration {
 	public function action_links( $links, $file ) {
 
 		// Return normal links if not BuddyPress.
-		if ( MYPLUGIN_BB_ADDON_PLUGIN_BASENAME != $file ) {
+		if ( ACTIVITYPA_BB_ADDON_PLUGIN_BASENAME != $file ) {
 			return $links;
 		}
 
@@ -59,7 +59,7 @@ class MYPLUGIN_BuddyBoss_Integration extends BP_Integration {
 		return array_merge(
 			$links,
 			array(
-				'settings' => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-integrations&tab=bp-add-on' ) ) . '">' . __( 'Settings', 'buddyboss-platform-addon' ) . '</a>',
+				'settings' => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-integrations&tab=bp-activitypa' ) ) . '">' . __( 'Settings', 'activity-popup-addon' ) . '</a>',
 			)
 		);
 	}
