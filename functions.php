@@ -134,3 +134,66 @@ function ACTIVITYPA_register_integration() {
 	buddypress()->integrations['addon'] = new ACTIVITYPA_BuddyBoss_Integration();
 }
 add_action( 'bp_setup_integrations', 'ACTIVITYPA_register_integration' );
+
+
+function enqueue_plugin_scripts() {
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('jquery-modal-js', plugins_url('js/jquery.modal.min.js', __FILE__), '1.0.0', false);
+    wp_enqueue_script('activity-popup-addon-js', plugins_url('js/index.js', __FILE__), '1.0.0', false);
+    wp_enqueue_style('jquery-modal-css', plugins_url('css/jquery.modal.min.css', __FILE__), '1.0.0', false);
+    wp_enqueue_style('activity-popup-addon-css', plugins_url('css/index.css', __FILE__), '1.0.0', false);
+}
+
+function add_buy_button() {
+	global $activities_template;
+  $activity = $activities_template->activity;
+
+  $current_user = wp_get_current_user();
+  $current_user_id = $current_user->ID;
+  $post_code = bp_get_profile_field_data([
+    'field' => 'Post Code',
+    'user_id' => $current_user_id
+  ]);
+  $community = bp_get_profile_field_data([
+    'field' => 'Community',
+    'user_id' => $current_user_id
+  ]);
+
+  $activity_user_id = $activity->user_id;
+  $activity_user = get_userdata($activity_user_id);
+
+  $is_menu_post = strpos($activity->content, '#menu') !== false;
+
+  if ($is_menu_post && in_array("administrator", $activity_user->roles)) {
+    echo "<div class='generic-button'><a href='http://localhost:8888?post_code=$post_code' target='_blank' class='catalog-button'>Buy Now($community)</a></div>";
+  }
+}
+
+function add_activity_state_class($class = '') {
+	global $activities_template;
+
+  $current_user_id = wp_get_current_user()->ID;
+  $community = bp_get_profile_field_data([
+    'field' => 'Community',
+    'user_id' => $current_user_id
+  ]);
+
+  $community_tag = '#' . preg_replace('/\s+/', '', $community);
+  $activity = $activities_template->activity;
+  $activity_user_id = $activity->user_id;
+  $activity_user = get_userdata($activity_user_id);
+  $can_post_menu = in_array("administrator", $activity_user->roles);
+
+  $is_menu_post = strpos($activity->content, '#menu') !== false;
+
+  if ($is_menu_post && $can_post_menu && !current_user_can('administrator')) {
+    $visible_community = strpos($activity->content, $community_tag) !== false;
+    $state = $visible_community ? "visible" : "hidden";
+    $class .= " activity-$state";
+  }
+	return $class;
+}
+
+add_action('wp_enqueue_scripts', 'enqueue_plugin_scripts');
+add_action('bp_activity_entry_meta', 'add_buy_button');
+add_filter('bp_get_activity_css_class', 'add_activity_state_class');

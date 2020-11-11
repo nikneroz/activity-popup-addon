@@ -1,0 +1,20 @@
+.activity-hidden {
+  display: none !important;
+}
+
+.catalog-button:hover {
+  color: white !important;
+  background-color: #007cff !important;
+}
+
+.blocker {
+  z-index: 1000;
+}
+
+.modal {
+  max-width: 1024px;
+}
+
+.modal a.close-modal {
+  background-color: transparent !important;
+}
