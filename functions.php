@@ -190,7 +190,7 @@ function add_buy_button() {
       </div>
       <div class='generic-button buy' data-first-name='$first_name' data-last-name='$last_name' data-phone='$phone' data-email='$email' data-address='$address'>
         <a href='#' data-id='$menu_link' class='catalog-button menu-button'>
-          Buy Now($menu_link)
+          Order
         </a>
       </div>
     ";
@@ -201,7 +201,7 @@ function add_buy_button() {
 function add_activity_comment_community($name = '') {
   $current_user_id = wp_get_current_user()->ID;
   $community = get_user_field($current_user_id, 'Community');
-  return "$name($community)";
+  return "$name - $community ";
 }
 
 function add_activity_state_class($class = '') {
