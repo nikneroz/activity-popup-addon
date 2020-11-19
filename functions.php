@@ -138,10 +138,20 @@ add_action( 'bp_setup_integrations', 'ACTIVITYPA_register_integration' );
 
 function enqueue_plugin_scripts() {
     wp_enqueue_script('jquery');
-    wp_enqueue_script('jquery-modal-js', plugins_url('js/jquery.modal.min.js', __FILE__), '1.0.0', false);
+
+    wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
+    wp_enqueue_script('jquery-modal-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js');
+    wp_enqueue_style('jquery-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css');
     wp_enqueue_script('activity-popup-addon-js', plugins_url('js/index.js', __FILE__), '1.0.0', false);
-    wp_enqueue_style('jquery-modal-css', plugins_url('css/jquery.modal.min.css', __FILE__), '1.0.0', false);
     wp_enqueue_style('activity-popup-addon-css', plugins_url('css/index.css', __FILE__), '1.0.0', false);
+    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+}
+
+function get_user_field($user_id, $field){
+  return bp_get_profile_field_data([
+    'field' => $field,
+    'user_id' => $user_id
+  ]);
 }
 
 function add_buy_button() {
@@ -150,23 +160,47 @@ function add_buy_button() {
 
   $current_user = wp_get_current_user();
   $current_user_id = $current_user->ID;
-  $post_code = bp_get_profile_field_data([
-    'field' => 'Post Code',
-    'user_id' => $current_user_id
-  ]);
-  $community = bp_get_profile_field_data([
-    'field' => 'Community',
-    'user_id' => $current_user_id
-  ]);
+  $post_code = get_user_field($current_user_id, 'Post Code');
+  $community = get_user_field($current_user_id, 'Community');
+  $first_name = get_user_field($current_user_id, 'First Name');
+  $last_name = get_user_field($current_user_id, 'Last Name');
+  $phone = get_user_field($current_user_id, 'Phone');
+  $email = get_user_field($current_user_id, 'Email');
+  $address = get_user_field($current_user_id, 'Address 1');
 
   $activity_user_id = $activity->user_id;
   $activity_user = get_userdata($activity_user_id);
 
   $is_menu_post = strpos($activity->content, '#menu') !== false;
 
+  $menu_id = 'HPOS1836401';
   if ($is_menu_post && in_array("administrator", $activity_user->roles)) {
-    echo "<div class='generic-button'><a href='http://localhost:8888?post_code=$post_code' target='_blank' class='catalog-button'>Buy Now($community)</a></div>";
+    $content = "
+      <div id='ex1' class='modal'>
+        <h1 class='text-center'>Menu $menu_id</h1>
+        <div class='container'>
+          <div class='row justify-content-md-center'>
+            <div class='col col-md-6'></div>
+            <div class='col col-md-2'>Price</div>
+            <div class='col col-md-2'>Quantity</div>
+            <div class='col col-md-2'></div>
+          </div>
+        </div>
+      </div>
+      <div class='generic-button buy' data-first-name='$first_name' data-last-name='$last_name' data-phone='$phone' data-email='$email' data-address='$address'>
+        <a href='#' data-id='HPOS1836401' class='catalog-button menu-button'>
+          Buy Now($community)
+        </a>
+      </div>
+    ";
+    echo $content;
   }
+}
+
+function add_activity_comment_community($name = '') {
+  $current_user_id = wp_get_current_user()->ID;
+  $community = get_user_field($current_user_id, 'Community');
+  return "$name($community)";
 }
 
 function add_activity_state_class($class = '') {
@@ -197,3 +231,5 @@ function add_activity_state_class($class = '') {
 add_action('wp_enqueue_scripts', 'enqueue_plugin_scripts');
 add_action('bp_activity_entry_meta', 'add_buy_button');
 add_filter('bp_get_activity_css_class', 'add_activity_state_class');
+add_filter('bp_activity_comment_name', 'add_activity_comment_community');
+
