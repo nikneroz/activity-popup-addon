@@ -27,7 +27,7 @@ var modal = jQuery.modal;
 const hostname = window.location.hostname;
 const isStaging = hostname == "staging-homecooksbb.temp927.kinsta.cloud";
 const host = isStaging
-  ? "http://api.homecooksapp.co.uk"
+  ? "https://api.homecooksapp.co.uk"
   : "http://localhost:8002";
 
 $(document).ready(function () {
