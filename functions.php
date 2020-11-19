@@ -172,12 +172,13 @@ function add_buy_button() {
   $activity_user = get_userdata($activity_user_id);
 
   $is_menu_post = strpos($activity->content, '#menu') !== false;
-
-  $menu_id = 'HPOS1836401';
-  if ($is_menu_post && in_array("administrator", $activity_user->roles)) {
+  preg_match("/#(\w+)LINK/", $activity->content, $links);
+  $menu_link = $links[1];
+  
+  if ($is_menu_post && in_array("administrator", $activity_user->roles) && $menu_link) {
     $content = "
       <div id='ex1' class='modal'>
-        <h1 class='text-center'>Menu $menu_id</h1>
+        <h1 class='text-center'>Menu $menu_link</h1>
         <div class='container'>
           <div class='row justify-content-md-center'>
             <div class='col col-md-6'></div>
@@ -188,8 +189,8 @@ function add_buy_button() {
         </div>
       </div>
       <div class='generic-button buy' data-first-name='$first_name' data-last-name='$last_name' data-phone='$phone' data-email='$email' data-address='$address'>
-        <a href='#' data-id='HPOS1836401' class='catalog-button menu-button'>
-          Buy Now($community)
+        <a href='#' data-id='$menu_link' class='catalog-button menu-button'>
+          Buy Now($menu_link)
         </a>
       </div>
     ";

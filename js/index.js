@@ -24,7 +24,11 @@ class Cart {
 
 var $ = jQuery;
 var modal = jQuery.modal;
-const host = "http://localhost:8001";
+const hostname = window.location.hostname;
+const isStaging = hostname == "staging-homecooksbb.temp927.kinsta.cloud";
+const host = isStaging
+  ? "http://api.homecooksapp.co.uk"
+  : "http://localhost:8002";
 
 $(document).ready(function () {
   $(document).on("click", ".menu-button", function (e) {
@@ -76,6 +80,10 @@ $(document).ready(function () {
       }
 
       var fd = new FormData();
+      fd.append("first_name", $("input[name='first_name']").val());
+      fd.append("last_name", $("input[name='last_name']").val());
+      fd.append("phone", $("input[name='phone']").val());
+      fd.append("email", $("input[name='email']").val());
 
       if (fulfilmentEl.val() == "collection_box") {
         fd.append("collection_time", $("#ec_Time").val());
@@ -95,7 +103,7 @@ $(document).ready(function () {
       }
 
       $.ajax({
-        url: `http://localhost:8001/api/v1/prepare-fulfilment/${paymentLinkReference}`,
+        url: `${host}/api/v1/prepare-fulfilment/${paymentLinkReference}`,
         type: "POST",
         data: fd,
         cache: false,
@@ -179,24 +187,24 @@ $(document).ready(function () {
             <form>
               <div class="form-group">
                 <label for="first_name">First Name</label>
-                <input value="${firstName}" type="text" class="form-control" name="first_name" placeholder="Enter first name">
+                <input value="${firstName}" type="text" class="form-control" name="first_name" required placeholder="Enter first name">
               </div>
               <div class="form-group">
                 <label for="last_name">Last Name</label>
-                <input value="${lastName}" type="text" class="form-control" name="last_name" placeholder="Enter last name">
+                <input value="${lastName}" type="text" class="form-control" name="last_name" required placeholder="Enter last name">
               </div>
               <div class="form-group">
                 <label for="email">Email</label>
-                <input value="${email}" type="email" class="form-control" name="email" placeholder="Enter email">
+                <input value="${email}" type="email" class="form-control" name="email" required placeholder="Enter email">
               </div>
               <div class="form-group">
                 <label for="phone">Phone</label>
-                <input value="${phone}" type="text" class="form-control" name="phone" placeholder="Enter phone">
+                <input value="${phone}" type="text" class="form-control" name="phone" required placeholder="Enter phone">
               </div>
               ${fulfilment}
               <div class="form-group">
                 <label for="delivery_address">Delivery Address</label>
-                <input value="${deliveryAddress}" type="text" class="form-control" name="delivery_address" placeholder="Enter delivery address">
+                <input value="${deliveryAddress}" type="text" class="form-control" name="delivery_address" required placeholder="Enter delivery address">
               </div>
               <div class="form-group">
                 <label for="delivery_instructions">Delivery Instructions</label>
