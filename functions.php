@@ -198,9 +198,13 @@ function add_buy_button() {
 }
 
 function add_activity_comment_community($name = '') {
-  $current_user_id = wp_get_current_user()->ID;
+  $current_user_id = bp_get_activity_comment_user_id();
   $community = get_user_field($current_user_id, 'Community');
-  return "$name - $community ";
+  if ($community == '') {
+    return $name;
+  } else {
+    return "$name - $community";
+  }
 }
 
 function add_activity_state_class($class = '') {
