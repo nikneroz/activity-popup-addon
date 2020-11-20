@@ -148,6 +148,11 @@ $(document).ready(function () {
           const email = dataEl.data("email");
           const deliveryAddress = dataEl.data("address");
 
+          const modalEl = $("#ex1");
+          modalEl.on($.modal.BEFORE_CLOSE, function (_event, _modal) {
+            modalEl.children(".container").html("");
+          });
+
           const items = data.items.map(
             (i) => `
             <div class='row justify-content-md-center'>
@@ -220,7 +225,7 @@ $(document).ready(function () {
             </form>
           `;
 
-          modalEl.children(".container").html(form);
+          $(".modal > .container").html(form);
         },
         dataType: "json",
       });
@@ -228,6 +233,12 @@ $(document).ready(function () {
 
     const success = function (data) {
       modalEl.modal();
+      modalEl
+        .children(".container")
+        .append(`<h1 class="text-center">Menu "${data.title}"</h1>`);
+      dataEl = $(".generic-button.buy").first();
+      const plusImage = dataEl.data("plus");
+      const minusImage = dataEl.data("minus");
       const categories = data.products.reduce((acc, product) => {
         if (!acc[product.category]) acc[product.category] = []; //If this type wasn't previously stored
         acc[product.category].push(product);
@@ -238,19 +249,20 @@ $(document).ready(function () {
         const products = categories[category];
         const rows = products.map(
           (p) => `
-            <div class='row justify-content-md-center'>
-              <div class='col col-sm-1'></div>
-              <div class='col col-md-5'>${p.title}</div>
-              <div class='col col-md-2'>${p.price_text}</div>
-              <div class='col col-md-2' id='quantity_${p.id}'>0</div>
-              <div class='col col-md-2'>
-                <button type="button" data-product-id='${p.id}' data-price='${p.price}' class="btn btn-danger remove-from-cart">-</button>
-                <button type="button" data-product-id='${p.id}' data-price='${p.price}' class="btn btn-primary add-to-cart">+</button>
+            <div class="starters__item item">
+              <div class="item__form">
+                <span class="item__name">${p.title}</span>
+                <span class="item__counter counter">
+                  <span class="counter__price">${p.price_text}</span>
+                  <div data-product-id='${p.id}' data-price='${p.price}' class="counter__btn remove-from-cart"><img src="${minusImage}" /></div>
+                  <span id='quantity_${p.id}' class="counter__count">0</span>
+                  <div data-product-id='${p.id}' data-price='${p.price}' class="counter__btn add-to-cart"><img src="${plusImage}" /></div>
+                </span>
               </div>
             </div>
           `
         );
-        const total = `<h2 class='total'>Total: £${cart.total}</h2>`;
+        // const total = `<h2 class='total'>Total: £${cart.total}</h2>`;
         const checkout = `
             <div class="text-center">
               <button type="button" class="btn btn-success btn-lg btn-checkout" disabled data-post-id='${data.post_id}'>Checkout</button>
@@ -258,7 +270,9 @@ $(document).ready(function () {
           `;
         modalEl
           .children(".container")
-          .append(`<h2>${category}</h2>${rows}${total}${checkout}`);
+          .append(
+            `<h2 class="starters__title">${category}</h2>${rows}${checkout}`
+          );
       });
     };
 
@@ -272,39 +286,4 @@ $(document).ready(function () {
       dataType: "json",
     });
   });
-
-  // $(document).on("click", ".product-details-popup", function (e) {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   var reference_no = $(this).data("id");
-  //   $.ajax({
-  //     url: "/product-detail-popup/" + reference_no,
-  //     method: "get",
-  //     success: function (res) {
-  //       $("#product_image").attr("src", res.image);
-  //       $("#product_title").text(res.title);
-  //       $("#product_price").text(res.price);
-  //       $("#seller_name").text(res.seller);
-  //       $("#dietaryTag").text(res.dietaryTags);
-  //       $("#cuisineTag").text(res.cuisineTags);
-  //       $("#product_description").text(res.description);
-  //       $("#allergens").text(res.allergens);
-  //       $("#reheating_instruction_1").parent().show();
-  //       $("#reheating_instruction_2").parent().show();
-  //       if (res.reheating_instruction_1 != null) {
-  //         $("#reheating_instruction_1").text(res.reheating_instruction_1);
-  //       } else {
-  //         $("#reheating_instruction_1").parent().hide();
-  //       }
-
-  //       if (res.reheating_instruction_2 != null) {
-  //         $("#reheating_instruction_2").text(res.reheating_instruction_2);
-  //       } else {
-  //         $("#reheating_instruction_2").parent().hide();
-  //       }
-
-  //       $("#exampleModalCenter").modal("show");
-  //     },
-  //   });
-  // });
 });

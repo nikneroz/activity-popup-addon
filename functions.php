@@ -137,14 +137,18 @@ add_action( 'bp_setup_integrations', 'ACTIVITYPA_register_integration' );
 
 
 function enqueue_plugin_scripts() {
-    wp_enqueue_script('jquery');
+    global $post;
 
-    wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
-    wp_enqueue_script('jquery-modal-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js');
-    wp_enqueue_style('jquery-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css');
-    wp_enqueue_script('activity-popup-addon-js', plugins_url('js/index.js', __FILE__), '1.0.0', false);
-    wp_enqueue_style('activity-popup-addon-css', plugins_url('css/index.css', __FILE__), '1.0.0', false);
-    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+    if ($post->post_name == 'news-feed') {
+      wp_enqueue_script('jquery');
+
+      wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
+      wp_enqueue_script('jquery-modal-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js');
+      wp_enqueue_style('jquery-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css');
+      wp_enqueue_script('activity-popup-addon-js', plugins_url('js/index.js', __FILE__), '1.0.0', false);
+      wp_enqueue_style('activity-popup-addon-css', plugins_url('css/index.css', __FILE__), '1.0.0', false);
+      wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+    }
 }
 
 function get_user_field($user_id, $field){
@@ -174,21 +178,16 @@ function add_buy_button() {
   $is_menu_post = strpos($activity->content, '#menu') !== false;
   preg_match("/#(\w+)LINK/", $activity->content, $links);
   $menu_link = $links[1];
+
+  $minus_image = plugin_dir_url( __FILE__ ) . 'images/minus.svg';
+  $plus_image = plugin_dir_url( __FILE__ ) . 'images/plus.svg';
   
   if ($is_menu_post && in_array("administrator", $activity_user->roles) && $menu_link) {
     $content = "
       <div id='ex1' class='modal'>
-        <h1 class='text-center'>Menu $menu_link</h1>
-        <div class='container'>
-          <div class='row justify-content-md-center'>
-            <div class='col col-md-6'></div>
-            <div class='col col-md-2'>Price</div>
-            <div class='col col-md-2'>Quantity</div>
-            <div class='col col-md-2'></div>
-          </div>
-        </div>
+        <div class='container'></div>
       </div>
-      <div class='generic-button buy' data-first-name='$first_name' data-last-name='$last_name' data-phone='$phone' data-email='$email' data-address='$address'>
+      <div class='generic-button buy' data-plus='$plus_image' data-minus='$minus_image' data-first-name='$first_name' data-last-name='$last_name' data-phone='$phone' data-email='$email' data-address='$address'>
         <a href='#' data-id='$menu_link' class='catalog-button menu-button'>
           Order
         </a>
@@ -229,8 +228,22 @@ function add_activity_state_class($class = '') {
 	return $class;
 }
 
+function browse_page_js() {
+    global $post;
+
+    if( is_page() || is_single() ) {
+        if ($post->post_name == 'browse-menus') {
+           wp_enqueue_script('jquery');
+           wp_enqueue_script('moment', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js');
+           wp_enqueue_script('browse-menus-js', plugins_url('js/browse.js', __FILE__), '1.0.0', false);
+           wp_enqueue_style('browse-menus-css', plugins_url('css/browse.css', __FILE__), '1.0.0', false);
+
+        }
+    } 
+}
+
 add_action('wp_enqueue_scripts', 'enqueue_plugin_scripts');
 add_action('bp_activity_entry_meta', 'add_buy_button');
 add_filter('bp_get_activity_css_class', 'add_activity_state_class');
 add_filter('bp_activity_comment_name', 'add_activity_comment_community');
-
+add_action('wp_head', 'browse_page_js');

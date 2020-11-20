@@ -1,0 +1,120 @@
+/* * { */
+/*   font-family: Helvetica Neue, Helvetica, Arial, sans-serif; */
+/* } */
+
+.menus {
+  padding-top: 50px;
+}
+
+.section {
+  max-width: 1110px;
+  margin: 0 auto;
+}
+
+.section:not(:first-child) {
+  margin-top: 85px;
+}
+
+.section__title {
+  font-size: 42px;
+  font-weight: 300;
+  text-align: center;
+  color: #373a3c;
+  margin-bottom: 35px;
+}
+.section__content {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.card {
+  width: 25%;
+  max-width: 255px;
+  height: 329px;
+  max-height: 379px;
+  box-shadow: 7px 19px 55px 1px rgba(217, 220, 228, 0.55);
+  border-radius: 4px;
+  position: relative;
+  margin-bottom: 40px;
+  margin-right: 30px;
+}
+
+.card:nth-child(4) {
+  margin-right: 0;
+}
+
+.card__head {
+  padding: 14px 20px;
+}
+.card__title {
+  color: #373a3c;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.card__type {
+  font-size: 12px;
+  color: #646a6d;
+  margin-right: 18px;
+  text-transform: capitalize;
+}
+.card__status {
+  font-size: 12px;
+  background: #5890ff;
+  border-radius: 4px;
+  color: #fff;
+  padding: 4px 6px;
+}
+
+.card__content {
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.card__img {
+  max-width: 100%;
+  max-height: 216px;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.card__bottom {
+  position: absolute;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+  height: 50px;
+  background-color: #fff;
+  padding: 12px 20px 0;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+}
+.author__avatar {
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  margin-right: 12px;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.author__name {
+  font-size: 12px;
+  color: #646a6d;
+  line-height: 19px;
+}
+
