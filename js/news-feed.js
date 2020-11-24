@@ -62,9 +62,13 @@ const fetchMenuSuccess = function (menuId, cart, data) {
     const products = categories[category];
     const rows = products.map((p) => {
       const description = p.description
-        ? `<div class="item__description description hidden">
+        ? p.description.length > 155
+          ? `<div class="item__description description hidden">
             <p class='item__description__content'>${p.description}</p>
             <a class="description__btn">Read More</a>
+          </div>`
+          : `<div class="item__description description">
+            <p class='item__description__content'>${p.description}</p>
           </div>`
         : "";
       return `
