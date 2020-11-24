@@ -35,25 +35,28 @@ const renderMenu = (posts) => {
       const name = el[1];
 
       const items = postsByDate[date]
-        .map(
-          (p) => `
-      <div class="section__card card">
-        <div class="card__head">
-          <h3 class="card__title">${p.title}</h3>
-          <span class="card__type">${p.fulfilment_type} </span>
-          <span class="card__status">${p.remaining_order_quantity} Orders Left</span>
-        </div>
-        <div class="card__content">
-          <img class="card__img" src="${p.images[0]}" />
-        </div>
-        <div class="card__bottom">
-          <div class="card__author author">
-            <img class="author__avatar" src="https://mk0homecooksbbradspc.kinstacdn.com/wp-content/uploads/avatars/24/5f802df253db3-bpthumb.jpg" />
-            <span class="author__name">${p.seller}</span>
-          </div>
-        </div>
-      </div>`
-        )
+        .map((p) => {
+          const fulfilmentType =
+            p.fulfilment_type === "delivery_or_collection"
+              ? "Delivery/Collection"
+              : p.fulfilment_type;
+          return `
+              <div class="section__card card">
+                <div class="card__head">
+                  <h3 class="card__title">${p.title}</h3>
+                  <span class="card__type">${fulfilmentType} </span>
+                  <span class="card__status">${p.remaining_order_quantity} Orders Left</span>
+                </div>
+                <div class="card__image" style="background: url(${p.images[0]})"></div>
+                <div class="card__bottom">
+                  <div class="card__author author">
+                    <img class="author__avatar" src="https://mk0homecooksbbradspc.kinstacdn.com/wp-content/uploads/avatars/24/5f802df253db3-bpthumb.jpg" />
+                    <span class="author__name">${p.seller}</span>
+                  </div>
+                </div>
+              </div>
+             `;
+        })
         .join();
 
       const section = `
