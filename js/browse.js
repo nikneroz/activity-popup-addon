@@ -1,8 +1,9 @@
 var $ = jQuery;
 const hostname = window.location.hostname;
 const isStaging = hostname == "staging-homecooksbb.temp927.kinsta.cloud";
+// "//api.homecooksapp.co.uk"
 const host = isStaging
-  ? "https://api.homecooksapp.co.uk"
+  ? "https:api.homecooksportal.co.uk"
   : "http://localhost:8002";
 
 var html = '<div class="menus"></div>';
