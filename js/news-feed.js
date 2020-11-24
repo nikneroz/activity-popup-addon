@@ -35,7 +35,7 @@ const hostname = window.location.hostname;
 let host;
 switch (hostname) {
   case "staging-homecooksbb.temp927.kinsta.cloud":
-    host = "https://api.homecooksportal.co.uk";
+    host = "https://api.homecooksapp.co.uk";
     break;
   case "home-cooks.co.uk":
     host = "https://api.homecooksportal.co.uk";
