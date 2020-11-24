@@ -57,7 +57,7 @@ const renderMenu = (posts) => {
               </div>
              `;
         })
-        .join();
+        .join("");
 
       const section = `
     <section class="menus-section section">
