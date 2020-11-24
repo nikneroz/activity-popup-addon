@@ -36,8 +36,10 @@ const host = isStaging
   : "http://localhost:8002";
 
 const fetchMenuSuccess = function (menuId, cart, data) {
-  const modalEl = $(`#${menuId}`);
-  const container = $(`#${menuId}.modal > .container`);
+  $(`#${menuId}`).modal();
+
+  const modalEl = $(`.jquery-modal > #${menuId}`);
+  const container = $(`.jquery-modal > #${menuId}.modal > .container`);
 
   modalEl.on($.modal.BEFORE_CLOSE, function (_event, _modal) {
     cart.clear();
@@ -70,6 +72,9 @@ const fetchMenuSuccess = function (menuId, cart, data) {
               <div data-product-id='${p.id}' data-price='${p.price}' class="counter__btn add-to-cart"><img src="${plusImage}" /></div>
             </span>
           </div>
+          <p class="item__description description">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. <a class="description__btn">Read More</a>
+          </p>
         </div>
       `
     );
@@ -81,13 +86,11 @@ const fetchMenuSuccess = function (menuId, cart, data) {
     <h2 class="starters__title"></h2>
     <button disabled data-post-id='${data.post_id}' class="button--submit btn-checkout">Checkout <img src="${buttonImage}" /></button>
   `);
-
-  modalEl.modal();
 };
 
 const saveMenuSuccess = function (menuId, cart, data) {
-  const modalEl = $(`#${menuId}`);
-  const container = $(`#${menuId}.modal > .container`);
+  const modalEl = $(`.jquery-modal > #${menuId}`);
+  const container = $(`.jquery-modal > #${menuId}.modal > .container`);
 
   modalEl.on($.modal.BEFORE_CLOSE, function (_event, _modal) {
     cart.clear();
