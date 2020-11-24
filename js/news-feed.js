@@ -34,7 +34,7 @@ const isStaging = hostname == "staging-homecooksbb.temp927.kinsta.cloud";
 // "https://api.homecooksapp.co.uk"
 // "https://api.homecooksportal.co.uk"
 const host = isStaging
-  ? "https://api.homecooksapp.co.uk"
+  ? "https://api.homecooksportal.co.uk"
   : "http://localhost:8002";
 
 const fetchMenuSuccess = function (menuId, cart, data) {
