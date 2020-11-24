@@ -31,9 +31,10 @@ var modal = jQuery.modal;
 // var autocompleter = jQuery.autocompleter;
 const hostname = window.location.hostname;
 const isStaging = hostname == "staging-homecooksbb.temp927.kinsta.cloud";
-// "//api.homecooksapp.co.uk"
+// "https://api.homecooksapp.co.uk"
+// "https://api.homecooksportal.co.uk"
 const host = isStaging
-  ? "https://api.homecooksportal.co.uk"
+  ? "https://api.homecooksapp.co.uk"
   : "http://localhost:8002";
 
 const fetchMenuSuccess = function (menuId, cart, data) {
