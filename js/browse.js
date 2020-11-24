@@ -50,7 +50,7 @@ const renderMenu = (posts) => {
                 <div class="card__image" style="background: url(${p.images[0]})"></div>
                 <div class="card__bottom">
                   <div class="card__author author">
-                    <img class="author__avatar" src="https://mk0homecooksbbradspc.kinstacdn.com/wp-content/uploads/avatars/24/5f802df253db3-bpthumb.jpg" />
+                    <img class="author__avatar" src="https://staging-homecooksbb.temp927.kinsta.cloud/wp-content/plugins/activity-popup-addon/images/chef_icon.jpeg" />
                     <span class="author__name">${p.seller}</span>
                   </div>
                 </div>
