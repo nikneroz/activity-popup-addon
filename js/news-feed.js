@@ -192,7 +192,51 @@ const saveMenuSuccess = function (menuId, cart, data) {
   </div>`;
 
   container.html(form);
+  const input = document.getElementById("geocomplete");
+  new google.maps.places.Autocomplete(input, {});
+  // google.maps.event.addListener(autocomplete, "place_changed", function () {
+  //   console.log("place_changed");
+  //   const place = autocomplete.getPlace();
+  //   console.log(place);
+  // });
+  input.addEventListener("change", (_event) => {
+    input.value = null;
+  });
+
+  // $("#geocomplete").autocomplete({
+  //   source: function (request, response) {
+  //     const { term } = request;
+  //     const googleApiKey = "AIzaSyCwUWvrwC2F3K4sluMgaf6xHxCjsv-LIr4";
+  //     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${term}&key=${googleApiKey}`;
+  //     // urlN = console.log(request);
+  //     $.ajax({
+  //       url,
+  //       type: "GET",
+  //       dataType: "jsonp",
+  //       // crossDomain: true,
+  //       success: function (data) {
+  //         console.log(data);
+  //         // response(
+  //         //   $.map(data.geonames, function (item) {
+  //         //     return {
+  //         //       label:
+  //         //         item.name +
+  //         //         (item.adminName1 ? ", " + item.adminName1 : "") +
+  //         //         ", " +
+  //         //         item.countryName,
+  //         //       value: item.name,
+  //         //     };
+  //         // })
+  //         // );
+  //       },
+  //     });
+  //   },
+  // });
 };
+
+function initMap() {
+  console.log("DONE!");
+}
 
 $(document).ready(function () {
   $(document).on("click", ".menu-button", function (e) {

@@ -97,6 +97,10 @@
   outline: none;
 }
 
+.ui-autocomplete{
+  z-index: 1000;
+}
+
 .description {
   transition: max-height;
   background-color: #f8faff;
@@ -112,6 +116,7 @@
   overflow: hidden;
   transition: all 0.3s ease;
 }
+
 .description.hidden > .item__description__content {
   max-height: 22px;
 }
