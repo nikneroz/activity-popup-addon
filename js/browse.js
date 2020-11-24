@@ -67,7 +67,7 @@ const renderMenu = (posts) => {
     `;
       return section;
     })
-    .join();
+    .join("");
 
   $(".menus").html(content);
 };
