@@ -145,9 +145,12 @@ function enqueue_plugin_scripts() {
       wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
       wp_enqueue_script('jquery-modal-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js');
       wp_enqueue_style('jquery-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css');
-      wp_enqueue_script('activity-popup-addon-js', plugins_url('js/index.js', __FILE__), '1.0.0', false);
-      wp_enqueue_style('activity-popup-addon-css', plugins_url('css/index.css', __FILE__), '1.0.0', false);
-      wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
+      wp_enqueue_script('activity-popup-addon-js', plugins_url('js/news-feed.js', __FILE__), '1.0.0', false);
+      // wp_enqueue_script('jquery-autocompleter-js', plugins_url('js/jquery.autocompleter.min.js', __FILE__), '1.0.0', false);
+      wp_enqueue_style('news-feed-css', plugins_url('css/news-feed.css', __FILE__), '1.0.0', false);
+      wp_enqueue_style('news-feed-checkout-css', plugins_url('css/news-feed-checkout.css', __FILE__), '1.0.0', false);
+      // wp_enqueue_style('jquery-autocompleter-css', plugins_url('css/jquery.autocompleter.css', __FILE__), '1.0.0', false);
+      // wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css');
     }
 }
 
@@ -181,13 +184,14 @@ function add_buy_button() {
 
   $minus_image = plugin_dir_url( __FILE__ ) . 'images/minus.svg';
   $plus_image = plugin_dir_url( __FILE__ ) . 'images/plus.svg';
+  $button_image = plugin_dir_url( __FILE__ ) . 'images/button.svg';
   
   if ($is_menu_post && in_array("administrator", $activity_user->roles) && $menu_link) {
     $content = "
-      <div id='ex1' class='modal'>
+      <div class='modal' id='$menu_link'>
         <div class='container'></div>
       </div>
-      <div class='generic-button buy' data-plus='$plus_image' data-minus='$minus_image' data-first-name='$first_name' data-last-name='$last_name' data-phone='$phone' data-email='$email' data-address='$address'>
+      <div class='generic-button buy' data-button='$button_image' data-plus='$plus_image' data-minus='$minus_image' data-first-name='$first_name' data-last-name='$last_name' data-phone='$phone' data-email='$email' data-address='$address'>
         <a href='#' data-id='$menu_link' class='catalog-button menu-button'>
           Order
         </a>
