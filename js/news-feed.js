@@ -28,14 +28,21 @@ class Cart {
 
 var $ = jQuery;
 var modal = jQuery.modal;
-// var autocompleter = jQuery.autocompleter;
-const hostname = window.location.hostname;
-const isStaging = hostname == "staging-homecooksbb.temp927.kinsta.cloud";
+
 // "https://api.homecooksapp.co.uk"
 // "https://api.homecooksportal.co.uk"
-const host = isStaging
-  ? "https://api.homecooksportal.co.uk"
-  : "http://localhost:8002";
+const hostname = window.location.hostname;
+let host;
+switch (hostname) {
+  case "staging-homecooksbb.temp927.kinsta.cloud":
+    host = "https://api.homecooksportal.co.uk";
+    break;
+  case "home-cooks.co.uk":
+    host = "https://api.homecooksportal.co.uk";
+    break;
+  default:
+    host = "http://localhost:8002";
+}
 
 const fetchMenuSuccess = function (menuId, cart, data) {
   $(`#${menuId}`).modal();
