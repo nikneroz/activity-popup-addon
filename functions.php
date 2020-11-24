@@ -139,7 +139,7 @@ add_action( 'bp_setup_integrations', 'ACTIVITYPA_register_integration' );
 function enqueue_plugin_scripts() {
     global $post;
 
-    if ($post->post_name == 'news-feed') {
+    if ($post->post_name == 'food-feed') {
       wp_enqueue_script('jquery');
       wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
       wp_enqueue_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCwUWvrwC2F3K4sluMgaf6xHxCjsv-LIr4&libraries=places');
