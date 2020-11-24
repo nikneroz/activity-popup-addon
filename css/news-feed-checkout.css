@@ -3,25 +3,25 @@
 /*   transition: font-size 0.3s ease-in; */
 /* } */
 
-@media (min-width: 768px) and (max-width: 991.98px) {
-  html {
-    font-size: 16px;
-  }
-}
-@media (min-width: 992px) and (max-width: 1199.98px) {
-  html {
-    font-size: 20px;
-  }
-}
-@media (min-width: 1200px) {
-  html {
-    font-size: 22px;
-  }
-}
+/* @media (min-width: 768px) and (max-width: 991.98px) { */
+/*   html { */
+/*     font-size: 16px; */
+/*   } */
+/* } */
+/* @media (min-width: 992px) and (max-width: 1199.98px) { */
+/*   html { */
+/*     font-size: 20px; */
+/*   } */
+/* } */
+/* @media (min-width: 1200px) { */
+/*   html { */
+/*     font-size: 22px; */
+/*   } */
+/* } */
 
-* {
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-}
+/* * { */
+/*   font-family: Helvetica Neue, Helvetica, Arial, sans-serif; */
+/* } */
 
 .title {
   font-size: 1.25rem;
@@ -31,6 +31,7 @@
 .modal__content {
   /* max-width: 50%; */
   margin: 0 auto;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
 .table {

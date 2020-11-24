@@ -19,15 +19,17 @@
 
 .modal .container {
   padding: 30px;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
 .modal a.close-modal {
   background-color: transparent !important;
 }
 
-* {
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-}
+/* * { */
+/*   font-family: Helvetica Neue, Helvetica, Arial, sans-serif; */
+/* } */
+
 .section {
   max-width: 730px;
   margin: 0 auto;
