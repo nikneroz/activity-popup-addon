@@ -60,8 +60,14 @@ const fetchMenuSuccess = function (menuId, cart, data) {
 
   Object.keys(categories).forEach(function (category) {
     const products = categories[category];
-    const rows = products.map(
-      (p) => `
+    const rows = products.map((p) => {
+      const description = p.description
+        ? `<div class="item__description description hidden">
+            <p class='item__description__content'>${p.description}</p>
+            <a class="description__btn">Read More</a>
+          </div>`
+        : "";
+      return `
         <div class="starters__item item">
           <div class="item__form">
             <span class="item__name">${p.title}</span>
@@ -72,12 +78,10 @@ const fetchMenuSuccess = function (menuId, cart, data) {
               <div data-product-id='${p.id}' data-price='${p.price}' class="counter__btn add-to-cart"><img src="${plusImage}" /></div>
             </span>
           </div>
-          <p class="item__description description">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. <a class="description__btn">Read More</a>
-          </p>
+          ${description}
         </div>
-      `
-    );
+      `;
+    });
 
     container.append(`<h2 class="starters__title">${category}</h2>${rows}`);
   });
@@ -304,6 +308,9 @@ $(document).ready(function () {
     //     });
     //   });
     // });
+    $(document).on("click", ".description__btn", function () {
+      $(this).parent().toggleClass("hidden");
+    });
 
     $(document).on("click", ".btn-checkout", function (e) {
       e.preventDefault();

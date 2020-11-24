@@ -98,6 +98,7 @@
 }
 
 .description {
+  transition: max-height;
   background-color: #f8faff;
   padding: 20px 40px;
   font-weight: 300;
@@ -106,7 +107,20 @@
   position: relative;
 }
 
-.description::after {
+.item__description__content {
+  margin: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.description.hidden > .item__description__content {
+  max-height: 22px;
+}
+
+.description > .item__description__content {
+  max-height: 5em;
+}
+
+.description.hidden::after {
   content: "";
   display: block;
   width: 60%;
