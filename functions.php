@@ -141,17 +141,13 @@ function enqueue_plugin_scripts() {
 
     if ($post->post_name == 'news-feed') {
       wp_enqueue_script('jquery');
-
       wp_enqueue_script('stripe', 'https://js.stripe.com/v3/');
-      wp_enqueue_script('jquery-modal-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js');
       wp_enqueue_script('google-maps', 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCwUWvrwC2F3K4sluMgaf6xHxCjsv-LIr4&libraries=places');
 
-      wp_enqueue_script('jquery-ui-js', 'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js');
-      wp_enqueue_style('jquery-ui-css', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
-
+      wp_enqueue_script('jquery-modal-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js');
       wp_enqueue_style('jquery-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css');
-      wp_enqueue_script('activity-popup-addon-js', plugins_url('js/news-feed.js', __FILE__), '1.0.0', false);
 
+      wp_enqueue_script('news-feed-js', plugins_url('js/news-feed.js', __FILE__), '1.0.0', false);
       wp_enqueue_style('news-feed-css', plugins_url('css/news-feed.css', __FILE__), '1.0.0', false);
       wp_enqueue_style('news-feed-checkout-css', plugins_url('css/news-feed-checkout.css', __FILE__), '1.0.0', false);
     }
