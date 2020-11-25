@@ -1,3 +1,34 @@
+@media (max-width: 600px) {
+  .modal {
+    padding: 5px 10px;
+  }
+  .modal .container {
+    padding: 5px 0 !important;
+  }
+  .modal .order__title {
+    margin-bottom: 1em;
+  }
+  .modal .starters__title {
+    margin-left: 15px;
+  }
+  .modal .starters__item {
+    margin-top: 16px;
+  }
+  .modal .item__counter {
+    margin-bottom: 8px;
+  }
+  .modal .starter__item .item__form {
+    margin-left: 15px;
+    flex-direction: column;
+  }
+  .modal .starter__item .item__description{
+    padding: 15px 15px;
+  }
+  .modal .description.hidden > .item__description__content{
+    max-height: 15em;
+  }
+}
+
 .activity-hidden {
   display: none !important;
 }
