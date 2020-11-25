@@ -120,7 +120,26 @@ const fetchMenuSuccess = function (menuId, cart, data) {
 
   $(".description__btn").on("click", function (e) {
     e.preventDefault();
-    console.log($(this).parent().toggleClass("hidden"));
+    $(this).parent().toggleClass("hidden");
+  });
+
+  $(".btn-checkout").on("click", function (e) {
+    e.preventDefault();
+    var postId = $(this).data("post-id");
+
+    $.ajax({
+      type: "POST",
+      url: host + "/api/v1/save-cart",
+      data: {
+        post_id: postId,
+        products: cart.products,
+      },
+      error: function (_jqXhr, _textStatus, _errorMessage) {
+        alert("error");
+      },
+      success: (data) => saveMenuSuccess(menuId, cart, data),
+      dataType: "json",
+    });
   });
 };
 
@@ -224,6 +243,58 @@ const saveMenuSuccess = function (menuId, cart, data) {
   </div>`;
 
   container.html(form);
+
+  $(".btn-pay").on("click", function (e) {
+    e.preventDefault();
+    const fulfilmentEl = $("input[name='fulfilment']");
+    const paymentLinkReference = $(this).data("payment-link-reference");
+    const fulfilmentType = $(this).data("fulfilment-type");
+
+    if (fulfilmentType == "collection") {
+      fulfilmentEl.val("collection_box");
+    } else if (fulfilmentType == "delivery") {
+      fulfilmentEl.val("delivery_box");
+    }
+
+    var fd = new FormData();
+    fd.append("first_name", $("input[name='first_name']").val());
+    fd.append("last_name", $("input[name='last_name']").val());
+    fd.append("phone", $("input[name='phone']").val());
+    fd.append("email", $("input[name='email']").val());
+
+    if (fulfilmentEl.val() == "collection_box") {
+      fd.append("collection_time", $("#ec_Time").val());
+      fd.append("fulfilment", fulfilmentEl.val());
+    } else {
+      var file = $("input[name='front_door_photo']")[0].files[0];
+      if (file) fd.append("file", file);
+      fd.append("delivery_address", $("input[name='delivery_address']").val());
+      fd.append(
+        "delivery_instruction",
+        $("input[name='delivery_instruction']").val()
+      );
+      fd.append("fulfilment", fulfilmentEl.val());
+    }
+
+    $.ajax({
+      url: `${host}/api/v1/prepare-fulfilment/${paymentLinkReference}`,
+      type: "POST",
+      data: fd,
+      cache: false,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        Stripe(data.stripe_public)
+          .redirectToCheckout({
+            sessionId: data.stripe_id,
+          })
+          .then(function (result) {
+            console.log(result);
+          });
+      },
+    });
+  });
+
   const input = document.getElementById("geocomplete");
   new google.maps.places.Autocomplete(input, {});
   // google.maps.event.addListener(autocomplete, "place_changed", function () {
@@ -290,79 +361,6 @@ $(document).ready(function () {
       el.html(cart.quantity(productId));
       // total.html(`Total: £${cart.total}`);
       if (cart.total <= 0) checkout.prop("disabled", true);
-    });
-
-    $(document).on("click", ".btn-pay", function (e) {
-      e.preventDefault();
-      const fulfilmentEl = $("input[name='fulfilment']");
-      const paymentLinkReference = $(this).data("payment-link-reference");
-      const fulfilmentType = $(this).data("fulfilment-type");
-
-      if (fulfilmentType == "collection") {
-        fulfilmentEl.val("collection_box");
-      } else if (fulfilmentType == "delivery") {
-        fulfilmentEl.val("delivery_box");
-      }
-
-      var fd = new FormData();
-      fd.append("first_name", $("input[name='first_name']").val());
-      fd.append("last_name", $("input[name='last_name']").val());
-      fd.append("phone", $("input[name='phone']").val());
-      fd.append("email", $("input[name='email']").val());
-
-      if (fulfilmentEl.val() == "collection_box") {
-        fd.append("collection_time", $("#ec_Time").val());
-        fd.append("fulfilment", fulfilmentEl.val());
-      } else {
-        var file = $("input[name='front_door_photo']")[0].files[0];
-        if (file) fd.append("file", file);
-        fd.append(
-          "delivery_address",
-          $("input[name='delivery_address']").val()
-        );
-        fd.append(
-          "delivery_instruction",
-          $("input[name='delivery_instruction']").val()
-        );
-        fd.append("fulfilment", fulfilmentEl.val());
-      }
-
-      $.ajax({
-        url: `${host}/api/v1/prepare-fulfilment/${paymentLinkReference}`,
-        type: "POST",
-        data: fd,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (data) {
-          Stripe(data.stripe_public)
-            .redirectToCheckout({
-              sessionId: data.stripe_id,
-            })
-            .then(function (result) {
-              console.log(result);
-            });
-        },
-      });
-    });
-
-    $(document).on("click", ".btn-checkout", function (e) {
-      e.preventDefault();
-      var postId = $(this).data("post-id");
-
-      $.ajax({
-        type: "POST",
-        url: host + "/api/v1/save-cart",
-        data: {
-          post_id: postId,
-          products: cart.products,
-        },
-        error: function (_jqXhr, _textStatus, _errorMessage) {
-          alert("error");
-        },
-        success: (data) => saveMenuSuccess(menuId, cart, data),
-        dataType: "json",
-      });
     });
   });
 });
