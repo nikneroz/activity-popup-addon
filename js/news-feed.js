@@ -67,20 +67,33 @@ const fetchMenuSuccess = function (menuId, cart, data) {
     return acc;
   }, {});
 
-  Object.keys(categories).forEach(function (category) {
+  const order = [
+    "Starter",
+    "Main",
+    "Side",
+    "Dessert",
+    "Extra",
+    "Snack",
+    "Deal",
+    "Pack",
+  ];
+
+  order.forEach(function (category) {
     const products = categories[category];
-    const rows = products.map((p) => {
-      const description = p.description
-        ? p.description.length > 155
-          ? `<div class="item__description description hidden">
+    if (products === undefined) return;
+    const rows = products
+      .map((p) => {
+        const description = p.description
+          ? p.description.length > 155
+            ? `<div class="item__description description hidden">
             <p class='item__description__content'>${p.description}</p>
             <a class="description__btn">Read More</a>
           </div>`
-          : `<div class="item__description description">
+            : `<div class="item__description description">
             <p class='item__description__content'>${p.description}</p>
           </div>`
-        : "";
-      return `
+          : "";
+        return `
         <div class="starters__item item">
           <div class="item__form">
             <span class="item__name">${p.title}</span>
@@ -94,7 +107,8 @@ const fetchMenuSuccess = function (menuId, cart, data) {
           ${description}
         </div>
       `;
-    });
+      })
+      .join("");
 
     container.append(`<h2 class="starters__title">${category}</h2>${rows}`);
   });
@@ -103,6 +117,11 @@ const fetchMenuSuccess = function (menuId, cart, data) {
     <h2 class="starters__title"></h2>
     <button disabled data-post-id='${data.post_id}' class="button--submit btn-checkout">Checkout <img src="${buttonImage}" /></button>
   `);
+
+  $(".description__btn").on("click", function (e) {
+    e.preventDefault();
+    console.log($(this).parent().toggleClass("hidden"));
+  });
 };
 
 const saveMenuSuccess = function (menuId, cart, data) {
@@ -189,7 +208,7 @@ const saveMenuSuccess = function (menuId, cart, data) {
         </label>
         <div class="file-input">
           <label class="form__field field">
-            <span class="field__text">Delivery Instructions</span>
+            <span class="field__text">(Optional) Add a pic of your front door to help the delivery driver find you</span>
           </label>
           <label for="file-upload" class="custom-file-upload">
             Choose File
@@ -325,27 +344,6 @@ $(document).ready(function () {
             });
         },
       });
-    });
-
-    // let searchPlace = "Paris";
-    // const googleApiKey = "AIzaSyCwUWvrwC2F3K4sluMgaf6xHxCjsv-LIr4";
-    // const searchReqLink = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchPlace}&types=geocode&key=${googleApiKey}&callback=?`;
-
-    // $("#geocomplete").autocomplete({
-    //   source: data,
-    // });
-
-    // $(document).on("change keyup", "#geocomplete", function () {
-    //   searchPlace = this.value;
-    //   // $.getJSON('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=1600+Amphitheatre&key=AIzaSyCwUWvrwC2F3K4sluMgaf6xHxCjsv-LIr4&callback=?')
-    //   $.getJSON(searchReqLink, function (result) {
-    //     $.each(result, function (_i, field) {
-    //       console.log(field);
-    //     });
-    //   });
-    // });
-    $(document).on("click", ".description__btn", function () {
-      $(this).parent().toggleClass("hidden");
     });
 
     $(document).on("click", ".btn-checkout", function (e) {
