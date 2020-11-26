@@ -68,14 +68,15 @@ const fetchMenuSuccess = function (menuId, cart, data) {
   }, {});
 
   const order = [
-    "Starter",
-    "Main",
-    "Side",
-    "Dessert",
-    "Extra",
-    "Snack",
-    "Deal",
-    "Pack",
+    "Starters",
+    "Mains",
+    "Sides",
+    "Desserts",
+    "Extras",
+    "Snacks",
+    "Desserts",
+    "Deals",
+    "Delivery",
   ];
 
   order.forEach(function (category) {
