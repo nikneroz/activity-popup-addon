@@ -44,8 +44,6 @@
 
 .modal {
   max-width: 1270px;
-  position: initial !important;
-  overflow-y: auto !important;
 }
 
 .modal .container {
