@@ -227,12 +227,13 @@ function add_activity_state_class($class = '') {
 
   $is_menu_post = strpos($activity->content, '#menu') !== false;
 
-  if ($is_menu_post && $can_post_menu && !current_user_can('administrator')) {
+  if ($is_menu_post && !$can_post_menu) {
     $visible_community = strpos($activity->content, $community_tag) !== false;
     $state = $visible_community ? "visible" : "hidden";
     $class .= " activity-$state";
   }
-	return $class;
+
+  return $class;
 }
 
 function browse_page_js() {
