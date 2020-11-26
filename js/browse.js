@@ -9,7 +9,7 @@ switch (hostname) {
     host = "https://api.homecooksportal.co.uk";
     break;
   default:
-    host = "http://localhost:8002";
+    host = "https://cehc-api.test";
 }
 
 var html = '<div class="menus"></div>';

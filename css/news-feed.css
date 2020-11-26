@@ -155,7 +155,7 @@
 }
 
 .description > .item__description__content {
-  max-height: 5em;
+  max-height: 50em;
 }
 
 .description.hidden::after {

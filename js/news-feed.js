@@ -41,7 +41,7 @@ switch (hostname) {
     host = "https://api.homecooksportal.co.uk";
     break;
   default:
-    host = "http://localhost:8002";
+    host = "https://cehc-api.test";
 }
 
 const fetchMenuSuccess = function (menuId, cart, data) {
@@ -161,15 +161,6 @@ const saveMenuSuccess = function (menuId, cart, data) {
   const deliveryAddress = dataEl.data("address");
   const buttonImage = dataEl.data("button");
 
-  const items = data.items.map(
-    (i) => `
-    <tr class="table__row">
-      <td class="cell cell-name">${i.name}</td>
-      <td class="cell cell-cost">£ ${i.cost}</td>
-    </tr>
-  `
-  );
-
   const total = `
     <tr class="table__row">
       <td class="cell cell-name">Total</td>
@@ -178,21 +169,13 @@ const saveMenuSuccess = function (menuId, cart, data) {
   `;
 
   const fulfilment = `<input type="hidden" name="fulfilment">`;
+  const isHidden = (field) => (field.length > 0 ? "hidden" : "");
 
   const form = `
   <div class="modal__content">
     <section class="order">
       <h2 class="order__title title">${data.post_title}</h2>
       <table class="order__table table">
-        <thead class="table__head">
-          <tr class="table__row">
-            <th class="cell cell-name">ITEM NAME</th>
-            <th class="cell cell-cost">COST</th>
-          </tr>
-        </thead>
-        <tbody class="table__body">
-          ${items}
-        </tbody>
         <tfoot class="table__foot">
           ${total}
         </tfoot>
@@ -200,27 +183,27 @@ const saveMenuSuccess = function (menuId, cart, data) {
     </section>
     <section class="delivery">
       <h2 class="delivery__title title">Delivery information</h2>
-      <form class="delivery__form form">
-        <label class="form__field field">
+      <form class="delivery__form form" id="checkout-form">
+        <label class="form__field ${isHidden(firstName)} field">
           <span class="field__text">First Name</span>
-          <input value="${firstName}" class="field__input" name="first_name" type="text" placeholder="Enter first name" />
+          <input required value="${firstName}" class="field__input" name="first_name" type="text" placeholder="Enter first name" />
         </label>
-        <label class="form__field field">
+        <label class="form__field ${isHidden(lastName)} field">
           <span class="field__text">Last Name</span>
-          <input value="${lastName}" class="field__input" name="last_name" type="text" placeholder="Enter last name" />
+          <input required value="${lastName}" class="field__input" name="last_name" type="text" placeholder="Enter last name" />
         </label>
-        <label class="form__field field">
+        <label class="form__field ${isHidden(email)} field">
           <span class="field__text">Email</span>
-          <input value="${email}" class="field__input" name="email" type="text" placeholder="Enter e-mail" />
+          <input required value="${email}" class="field__input" name="email" type="email" placeholder="Enter e-mail" />
         </label>
-        <label class="form__field field">
+        <label class="form__field ${isHidden(phone)} field">
           <span class="field__text">Phone</span>
-          <input value="${phone}" class="field__input" name="phone" type="text" placeholder="(480) 555-0103" />
+          <input required value="${phone}" class="field__input" name="phone" type="text" placeholder="(480) 555-0103" />
         </label>
         ${fulfilment}
         <label class="form__field field field__select">
           <span class="field__text ">Delivery Address</span>
-          <input value="${deliveryAddress}" name="delivery_address" id="geocomplete" class="field__input" value="" type="text" placeholder="" />
+          <input required value="${deliveryAddress}" name="delivery_address" id="geocomplete" class="field__input" value="" type="text" placeholder="" />
         </label>
         <label class="form__field field">
           <span class="field__text">Delivery Instructions</span>
@@ -230,14 +213,16 @@ const saveMenuSuccess = function (menuId, cart, data) {
           <label class="form__field field">
             <span class="field__text">(Optional) Add a pic of your front door to help the delivery driver find you</span>
           </label>
-          <label for="file-upload" class="custom-file-upload">
+          <label for="file-upload" class="custom-file-upload form__field">
             Choose File
+            <input id="file-upload" name="front_door_photo" type="file" />
           </label>
-          <input id="file-upload" name="front_door_photo" type="file" />
           <span class="file-list">No File Chosen</span>
         </div>
         <div class="form__submit">
-          <button data-fulfilment-type='${data}' data-payment-link-reference='${data.payment_link_reference}' class="button--submit btn-pay">Checkout <img src="${buttonImage}" /></button>
+          <button data-fulfilment-type='${data}' data-payment-link-reference='${
+    data.payment_link_reference
+  }' class="button--submit btn-pay">Checkout <img src="${buttonImage}" /></button>
         </div>
       </form>
     </section>
@@ -245,66 +230,78 @@ const saveMenuSuccess = function (menuId, cart, data) {
 
   container.html(form);
 
+  const formEl = document.getElementById("checkout-form");
+  const pristine = new Pristine(formEl, { classTo: "form__field" });
+
   $(".btn-pay").on("click", function (e) {
     e.preventDefault();
-    const fulfilmentEl = $("input[name='fulfilment']");
-    const paymentLinkReference = $(this).data("payment-link-reference");
-    const fulfilmentType = $(this).data("fulfilment-type");
 
-    if (fulfilmentType == "collection") {
-      fulfilmentEl.val("collection_box");
-    } else if (fulfilmentType == "delivery") {
-      fulfilmentEl.val("delivery_box");
+    // Validation
+    const valid = pristine.validate();
+
+    if (valid) {
+      const fulfilmentEl = $("input[name='fulfilment']");
+      const paymentLinkReference = $(this).data("payment-link-reference");
+      const fulfilmentType = $(this).data("fulfilment-type");
+
+      if (fulfilmentType == "collection") {
+        fulfilmentEl.val("collection_box");
+      } else if (fulfilmentType == "delivery") {
+        fulfilmentEl.val("delivery_box");
+      }
+
+      var fd = new FormData();
+      fd.append("first_name", $("input[name='first_name']").val());
+      fd.append("last_name", $("input[name='last_name']").val());
+      fd.append("phone", $("input[name='phone']").val());
+      fd.append("email", $("input[name='email']").val());
+
+      if (fulfilmentEl.val() == "collection_box") {
+        fd.append("collection_time", $("#ec_Time").val());
+        fd.append("fulfilment", fulfilmentEl.val());
+      } else {
+        var file = $("input[name='front_door_photo']")[0].files[0];
+        if (file) fd.append("file", file);
+        fd.append(
+          "delivery_address",
+          $("input[name='delivery_address']").val()
+        );
+        fd.append(
+          "delivery_instruction",
+          $("input[name='delivery_instruction']").val()
+        );
+        fd.append("fulfilment", fulfilmentEl.val());
+      }
+
+      $.ajax({
+        url: `${host}/api/v1/prepare-fulfilment/${paymentLinkReference}`,
+        type: "POST",
+        data: fd,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          Stripe(data.stripe_public)
+            .redirectToCheckout({
+              sessionId: data.stripe_id,
+            })
+            .then(function (result) {
+              console.log(result);
+            });
+        },
+      });
     }
-
-    var fd = new FormData();
-    fd.append("first_name", $("input[name='first_name']").val());
-    fd.append("last_name", $("input[name='last_name']").val());
-    fd.append("phone", $("input[name='phone']").val());
-    fd.append("email", $("input[name='email']").val());
-
-    if (fulfilmentEl.val() == "collection_box") {
-      fd.append("collection_time", $("#ec_Time").val());
-      fd.append("fulfilment", fulfilmentEl.val());
-    } else {
-      var file = $("input[name='front_door_photo']")[0].files[0];
-      if (file) fd.append("file", file);
-      fd.append("delivery_address", $("input[name='delivery_address']").val());
-      fd.append(
-        "delivery_instruction",
-        $("input[name='delivery_instruction']").val()
-      );
-      fd.append("fulfilment", fulfilmentEl.val());
-    }
-
-    $.ajax({
-      url: `${host}/api/v1/prepare-fulfilment/${paymentLinkReference}`,
-      type: "POST",
-      data: fd,
-      cache: false,
-      contentType: false,
-      processData: false,
-      success: function (data) {
-        Stripe(data.stripe_public)
-          .redirectToCheckout({
-            sessionId: data.stripe_id,
-          })
-          .then(function (result) {
-            console.log(result);
-          });
-      },
-    });
   });
 
   const input = document.getElementById("geocomplete");
-  new google.maps.places.Autocomplete(input, {});
-  // google.maps.event.addListener(autocomplete, "place_changed", function () {
-  //   console.log("place_changed");
-  //   const place = autocomplete.getPlace();
-  //   console.log(place);
-  // });
+  const autocomplete = new google.maps.places.Autocomplete(input, {});
+  google.maps.event.addListener(autocomplete, "place_changed", function () {
+    input.parentElement.classList.remove("has-danger");
+  });
   input.addEventListener("change", (_event) => {
-    input.value = null;
+    input.value = "";
+    input.parentElement.classList.add("has-danger");
+    input.parentElement.classList.remove("has-success");
   });
 };
 

@@ -147,6 +147,8 @@ function enqueue_plugin_scripts() {
       wp_enqueue_script('jquery-modal-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js');
       wp_enqueue_style('jquery-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css');
 
+      wp_enqueue_script('pristine-js', plugins_url('js/pristine.min.js', __FILE__), '1.0.0', false);
+
       wp_enqueue_script('news-feed-js', plugins_url('js/news-feed.js', __FILE__), '1.0.0', false);
       wp_enqueue_style('news-feed-css', plugins_url('css/news-feed.css', __FILE__), '1.0.1', false);
       wp_enqueue_style('news-feed-checkout-css', plugins_url('css/news-feed-checkout.css', __FILE__), '1.0.0', false);
@@ -227,7 +229,7 @@ function add_activity_state_class($class = '') {
 
   $is_menu_post = strpos($activity->content, '#menu') !== false;
 
-  if ($is_menu_post && !$can_post_menu) {
+  if ($is_menu_post && !current_user_can('administrator')) {
     $visible_community = strpos($activity->content, $community_tag) !== false;
     $state = $visible_community ? "visible" : "hidden";
     $class .= " activity-$state";
