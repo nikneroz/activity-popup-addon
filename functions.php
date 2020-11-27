@@ -252,8 +252,18 @@ function browse_page_js() {
     } 
 }
 
-add_action('wp_enqueue_scripts', 'enqueue_plugin_scripts');
-add_action('bp_activity_entry_meta', 'add_buy_button');
+
+function hide_post_submit_options() {
+  if (!current_user_can('administrator')) {
+    wp_enqueue_script('hide-post-submit-options-js', plugins_url('js/hide-post-submit-options.js', __FILE__), '1.0.0', false);
+    wp_enqueue_style('hide-post-submit-options-css', plugins_url('css/hide-post-submit-options.css', __FILE__), '1.0.0', false);
+  }
+}
+
 add_filter('bp_get_activity_css_class', 'add_activity_state_class');
 add_filter('bp_activity_comment_name', 'add_activity_comment_community');
+
 add_action('wp_head', 'browse_page_js');
+add_action('wp_enqueue_scripts', 'enqueue_plugin_scripts');
+add_action('bp_activity_entry_meta', 'add_buy_button');
+add_action('bp_after_activity_post_form', 'hide_post_submit_options');
