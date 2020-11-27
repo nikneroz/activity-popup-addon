@@ -294,7 +294,10 @@ const saveMenuSuccess = function (menuId, cart, data) {
   });
 
   const input = document.getElementById("geocomplete");
-  const autocomplete = new google.maps.places.Autocomplete(input, {});
+  const autocomplete = new google.maps.places.Autocomplete(input, {
+    types: ["address"],
+    componentRestrictions: { country: "uk" },
+  });
   google.maps.event.addListener(autocomplete, "place_changed", function () {
     input.parentElement.classList.remove("has-danger");
   });
