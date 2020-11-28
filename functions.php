@@ -176,7 +176,7 @@ function add_buy_button() {
   $email = get_user_field($current_user_id, 'Email');
   $address_1 = get_user_field($current_user_id, 'Address 1');
   $address_2 = get_user_field($current_user_id, 'Address 2');
-  $address = "$address_1, $address_2, $post_code";
+  $address = preg_replace('/^(\s|\,)+/', "", "$address_1, $address_2, $post_code");
 
   $activity_user_id = $activity->user_id;
   $activity_user = get_userdata($activity_user_id);
