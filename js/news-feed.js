@@ -293,20 +293,24 @@ const saveMenuSuccess = function (menuId, cart, data) {
     }
   });
 
-  const input = document.getElementById("geocomplete");
   geocoder = new google.maps.Geocoder();
-  geocoder.geocode({ address: input.value }, function (results, status) {
-    if (status == "OK") {
-      result = results[0];
-      if (result && (result.types || []).includes("street_address")) {
-        input.value = result.formatted_address;
+  const setAddressFromGeocode = (element) => {
+    geocoder.geocode({ address: element.value }, function (results, status) {
+      if (status == "OK") {
+        result = results[0];
+        if (result && (result.types || []).includes("street_address")) {
+          element.value = result.formatted_address;
+        } else {
+          element.value = "";
+        }
       } else {
-        input.value = "";
+        element.value = "";
       }
-    } else {
-      input.value = "";
-    }
-  });
+    });
+  };
+
+  const input = document.getElementById("geocomplete");
+  setAddressFromGeocode(input);
 
   const autocomplete = new google.maps.places.Autocomplete(input, {
     types: ["address"],
@@ -314,6 +318,7 @@ const saveMenuSuccess = function (menuId, cart, data) {
   });
   google.maps.event.addListener(autocomplete, "place_changed", function () {
     input.parentElement.classList.remove("has-danger");
+    setAddressFromGeocode(input);
   });
   input.addEventListener("change", (_event) => {
     input.value = "";
