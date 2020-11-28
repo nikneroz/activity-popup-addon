@@ -294,6 +294,20 @@ const saveMenuSuccess = function (menuId, cart, data) {
   });
 
   const input = document.getElementById("geocomplete");
+  geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address: input.value }, function (results, status) {
+    if (status == "OK") {
+      result = results[0];
+      if (result && (result.types || []).includes("street_address")) {
+        input.value = result.formatted_address;
+      } else {
+        input.value = "";
+      }
+    } else {
+      input.value = "";
+    }
+  });
+
   const autocomplete = new google.maps.places.Autocomplete(input, {
     types: ["address"],
     componentRestrictions: { country: "uk" },
