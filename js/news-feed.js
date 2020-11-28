@@ -309,22 +309,22 @@ const saveMenuSuccess = function (menuId, cart, data) {
     });
   };
 
-  const input = document.getElementById("geocomplete");
-  setAddressFromGeocode(input);
+  // const input = document.getElementById("geocomplete");
+  // setAddressFromGeocode(input);
 
-  const autocomplete = new google.maps.places.Autocomplete(input, {
-    types: ["address"],
-    componentRestrictions: { country: "uk" },
-  });
-  google.maps.event.addListener(autocomplete, "place_changed", function () {
-    input.parentElement.classList.remove("has-danger");
-    setAddressFromGeocode(input);
-  });
-  input.addEventListener("change", (_event) => {
-    input.value = "";
-    input.parentElement.classList.add("has-danger");
-    input.parentElement.classList.remove("has-success");
-  });
+  // const autocomplete = new google.maps.places.Autocomplete(input, {
+  //   types: ["address"],
+  //   componentRestrictions: { country: "uk" },
+  // });
+  // google.maps.event.addListener(autocomplete, "place_changed", function () {
+  //   input.parentElement.classList.remove("has-danger");
+  //   setAddressFromGeocode(input);
+  // });
+  // input.addEventListener("change", (_event) => {
+  //   input.value = "";
+  //   input.parentElement.classList.add("has-danger");
+  //   input.parentElement.classList.remove("has-success");
+  // });
 };
 
 function initMap() {
