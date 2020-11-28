@@ -147,11 +147,11 @@ function enqueue_plugin_scripts() {
       wp_enqueue_script('jquery-modal-js', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js');
       wp_enqueue_style('jquery-modal-css', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css');
 
-      wp_enqueue_script('pristine-js', plugins_url('js/pristine.min.js', __FILE__), '1.0.0', false);
+      wp_enqueue_script('pristine-js', plugins_url('js/pristine.min.js', __FILE__), '1.1.0', false);
 
-      wp_enqueue_script('news-feed-js', plugins_url('js/news-feed.js', __FILE__), '1.0.0', false);
-      wp_enqueue_style('news-feed-css', plugins_url('css/news-feed.css', __FILE__), '1.0.1', false);
-      wp_enqueue_style('news-feed-checkout-css', plugins_url('css/news-feed-checkout.css', __FILE__), '1.0.0', false);
+      wp_enqueue_script('news-feed-js', plugins_url('js/news-feed.js', __FILE__), '1.1.0', false);
+      wp_enqueue_style('news-feed-css', plugins_url('css/news-feed.css', __FILE__), '1.1.0', false);
+      wp_enqueue_style('news-feed-checkout-css', plugins_url('css/news-feed-checkout.css', __FILE__), '1.1.0', false);
     }
 }
 
@@ -245,8 +245,8 @@ function browse_page_js() {
         if ($post->post_name == 'browse-menus') {
            wp_enqueue_script('jquery');
            wp_enqueue_script('moment', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js');
-           wp_enqueue_script('browse-menus-js', plugins_url('js/browse.js', __FILE__), '1.0.0', false);
-           wp_enqueue_style('browse-menus-css', plugins_url('css/browse.css', __FILE__), '1.0.0', false);
+           wp_enqueue_script('browse-menus-js', plugins_url('js/browse.js', __FILE__), '1.1.0', false);
+           wp_enqueue_style('browse-menus-css', plugins_url('css/browse.css', __FILE__), '1.1.0', false);
 
         }
     } 
@@ -255,8 +255,8 @@ function browse_page_js() {
 
 function hide_post_submit_options() {
   if (!current_user_can('administrator')) {
-    wp_enqueue_script('hide-post-submit-options-js', plugins_url('js/hide-post-submit-options.js', __FILE__), '1.0.0', false);
-    wp_enqueue_style('hide-post-submit-options-css', plugins_url('css/hide-post-submit-options.css', __FILE__), '1.0.0', false);
+    wp_enqueue_script('hide-post-submit-options-js', plugins_url('js/hide-post-submit-options.js', __FILE__), '1.1.0', false);
+    wp_enqueue_style('hide-post-submit-options-css', plugins_url('css/hide-post-submit-options.css', __FILE__), '1.1.0', false);
   }
 }
 
