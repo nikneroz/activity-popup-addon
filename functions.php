@@ -174,7 +174,9 @@ function add_buy_button() {
   $last_name = get_user_field($current_user_id, 'Last Name');
   $phone = get_user_field($current_user_id, 'Phone');
   $email = get_user_field($current_user_id, 'Email');
-  $address = get_user_field($current_user_id, 'Address 1');
+  $address_1 = get_user_field($current_user_id, 'Address 1');
+  $address_2 = get_user_field($current_user_id, 'Address 2');
+  $address = "$address_1 $address_2 $post_code";
 
   $activity_user_id = $activity->user_id;
   $activity_user = get_userdata($activity_user_id);
