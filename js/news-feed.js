@@ -76,7 +76,6 @@ const fetchMenuSuccess = function (menuId, cart, data) {
     "Desserts",
     "Extras",
     "Snacks",
-    "Desserts",
     "Deals",
     "Delivery",
   ];
