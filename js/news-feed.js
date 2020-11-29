@@ -55,13 +55,15 @@ const fetchMenuSuccess = function (menuId, cart, data) {
     container.html("");
   });
 
-  container.append(`<h2 class="order__title title">${data.title}</h2>`);
+  const { title, products, post_id: postId } = data;
+
+  container.append(`<h2 class="order__title title">${title}</h2>`);
 
   dataEl = $(".generic-button.buy").first();
   const plusImage = dataEl.data("plus");
   const minusImage = dataEl.data("minus");
   const buttonImage = dataEl.data("button");
-  const categories = data.products.reduce((acc, product) => {
+  const categories = products.reduce((acc, product) => {
     if (!acc[product.category]) acc[product.category] = []; //If this type wasn't previously stored
     acc[product.category].push(product);
     return acc;
@@ -116,7 +118,7 @@ const fetchMenuSuccess = function (menuId, cart, data) {
 
   container.append(`
     <h2 class="starters__title"></h2>
-    <button disabled data-post-id='${data.post_id}' class="button--submit btn-checkout">Checkout <img src="${buttonImage}" /></button>
+    <button disabled data-post-id='${postId}' class="button--submit btn-checkout">Checkout <img src="${buttonImage}" /></button>
   `);
 
   $(".description__btn").on("click", function (e) {
@@ -126,7 +128,6 @@ const fetchMenuSuccess = function (menuId, cart, data) {
 
   $(".btn-checkout").on("click", function (e) {
     e.preventDefault();
-    var postId = $(this).data("post-id");
 
     $.ajax({
       type: "POST",
@@ -161,23 +162,71 @@ const saveMenuSuccess = function (menuId, cart, data) {
   const deliveryAddress = dataEl.data("address");
   const buttonImage = dataEl.data("button");
 
-  const total = `
+  const {
+    total,
+    fulfilment_type: fulfilmentType,
+    post_title: postTitle,
+    min_time: minTime,
+    max_time: maxTime,
+    payment_link_reference: paymentLinkReference,
+  } = data;
+
+  const totalEl = `
     <tr class="table__row">
       <td class="cell cell-name">Total</td>
-      <td class="cell cell-cost">£ ${data.total}</td>
+      <td class="cell cell-cost">£ ${total}</td>
     </tr>
   `;
 
-  const fulfilment = `<input type="hidden" name="fulfilment">`;
+  const userHasChoice = fulfilmentType == "delivery_or_collection";
+  const fulfilmentInput = userHasChoice
+    ? `<label class="form__field field field__select">
+          <span class="field__text ">Fulfilment Type</span>
+          <select name="fulfilment" id="fulfilment-select">
+            <option value="collection">Collection</option>
+            <option value="delivery">Delivery</option>
+          </select>
+        </label>`
+    : `<input type="hidden" name="fulfilment" value="${fulfilmentType}">`;
+
   const isHidden = (field) => (field.length > 0 ? "hidden" : "");
+
+  const fulfilmentElements = {
+    collection: `
+      <label class="form__field field field__select">
+        <span class="field__text ">Collection time available from ${minTime} to ${maxTime}</span>
+        <input type="time" required class="field__input" name="collection_time" min="${minTime}" max="${maxTime}" />
+      </label>
+    `,
+    delivery: `
+      <label class="form__field field field__select">
+        <span class="field__text ">Delivery Address</span>
+        <input required value="${deliveryAddress}" name="delivery_address" id="geocomplete" class="field__input" value="" type="text" placeholder="" />
+      </label>
+      <label class="form__field field">
+        <span class="field__text">Delivery Instructions</span>
+        <textarea class="field__input" name="delivery_instruction" type="text" rows="4"></textarea>
+      </label>
+      <div class="file-input">
+        <label class="form__field field">
+          <span class="field__text">(Optional) Add a pic of your front door to help the delivery driver find you</span>
+        </label>
+        <label for="file-upload" class="custom-file-upload form__field">
+          Choose File
+          <input id="file-upload" name="front_door_photo" type="file" />
+        </label>
+        <span class="file-list">No File Chosen</span>
+      </div>
+    `,
+  };
 
   const form = `
   <div class="modal__content">
     <section class="order">
-      <h2 class="order__title title">${data.post_title}</h2>
+      <h2 class="order__title title">${postTitle}</h2>
       <table class="order__table table">
         <tfoot class="table__foot">
-          ${total}
+          ${totalEl}
         </tfoot>
       </table>
     </section>
@@ -200,29 +249,16 @@ const saveMenuSuccess = function (menuId, cart, data) {
           <span class="field__text">Phone</span>
           <input required value="${phone}" class="field__input" name="phone" type="text" placeholder="(480) 555-0103" />
         </label>
-        ${fulfilment}
-        <label class="form__field field field__select">
-          <span class="field__text ">Delivery Address</span>
-          <input required value="${deliveryAddress}" name="delivery_address" id="geocomplete" class="field__input" value="" type="text" placeholder="" />
-        </label>
-        <label class="form__field field">
-          <span class="field__text">Delivery Instructions</span>
-          <textarea class="field__input" name="delivery_instruction" type="text" rows="4"></textarea>
-        </label>
-        <div class="file-input">
-          <label class="form__field field">
-            <span class="field__text">(Optional) Add a pic of your front door to help the delivery driver find you</span>
-          </label>
-          <label for="file-upload" class="custom-file-upload form__field">
-            Choose File
-            <input id="file-upload" name="front_door_photo" type="file" />
-          </label>
-          <span class="file-list">No File Chosen</span>
+        ${fulfilmentInput}
+        <div class="fulfilment-content">
+          ${
+            userHasChoice
+              ? fulfilmentElements.collection
+              : fulfilmentElements[fulfilmentType]
+          }
         </div>
         <div class="form__submit">
-          <button data-fulfilment-type='${data}' data-payment-link-reference='${
-    data.payment_link_reference
-  }' class="button--submit btn-pay">Checkout <img src="${buttonImage}" /></button>
+          <button data-fulfilment-type='${fulfilmentType}' data-payment-link-reference='${paymentLinkReference}' class="button--submit btn-pay">Checkout <img src="${buttonImage}" /></button>
         </div>
       </form>
     </section>
@@ -231,7 +267,14 @@ const saveMenuSuccess = function (menuId, cart, data) {
   container.html(form);
 
   const formEl = document.getElementById("checkout-form");
-  const pristine = new Pristine(formEl, { classTo: "form__field" });
+  let pristine = new Pristine(formEl, { classTo: "form__field" });
+
+  if (userHasChoice) {
+    $("#fulfilment-select").on("change", function (e) {
+      $(".fulfilment-content").html(fulfilmentElements[e.target.value]);
+      pristine = new Pristine(formEl, { classTo: "form__field" });
+    });
+  }
 
   $(".btn-pay").on("click", function (e) {
     e.preventDefault();
@@ -240,15 +283,8 @@ const saveMenuSuccess = function (menuId, cart, data) {
     const valid = pristine.validate();
 
     if (valid) {
-      const fulfilmentEl = $("input[name='fulfilment']");
       const paymentLinkReference = $(this).data("payment-link-reference");
-      const fulfilmentType = $(this).data("fulfilment-type");
-
-      if (fulfilmentType == "collection") {
-        fulfilmentEl.val("collection_box");
-      } else if (fulfilmentType == "delivery") {
-        fulfilmentEl.val("delivery_box");
-      }
+      const currentFulfilment = $('*[name="fulfilment"]').val();
 
       var fd = new FormData();
       fd.append("first_name", $("input[name='first_name']").val());
@@ -256,10 +292,10 @@ const saveMenuSuccess = function (menuId, cart, data) {
       fd.append("phone", $("input[name='phone']").val());
       fd.append("email", $("input[name='email']").val());
 
-      if (fulfilmentEl.val() == "collection_box") {
-        fd.append("collection_time", $("#ec_Time").val());
-        fd.append("fulfilment", fulfilmentEl.val());
-      } else {
+      if (currentFulfilment == "collection") {
+        fd.append("collection_time", $("input[name='collection_time']").val());
+        fd.append("fulfilment", "collection_box");
+      } else if (currentFulfilment == "delivery") {
         var file = $("input[name='front_door_photo']")[0].files[0];
         if (file) fd.append("file", file);
         fd.append(
@@ -270,7 +306,9 @@ const saveMenuSuccess = function (menuId, cart, data) {
           "delivery_instruction",
           $("input[name='delivery_instruction']").val()
         );
-        fd.append("fulfilment", fulfilmentEl.val());
+        fd.append("fulfilment", "delivery_box");
+      } else {
+        alert("Fulfilment not selected!");
       }
 
       $.ajax({
@@ -293,21 +331,21 @@ const saveMenuSuccess = function (menuId, cart, data) {
     }
   });
 
-  geocoder = new google.maps.Geocoder();
-  const setAddressFromGeocode = (element) => {
-    geocoder.geocode({ address: element.value }, function (results, status) {
-      if (status == "OK") {
-        result = results[0];
-        if (result && (result.types || []).includes("street_address")) {
-          element.value = result.formatted_address;
-        } else {
-          element.value = "";
-        }
-      } else {
-        element.value = "";
-      }
-    });
-  };
+  // geocoder = new google.maps.Geocoder();
+  // const setAddressFromGeocode = (element) => {
+  //   geocoder.geocode({ address: element.value }, function (results, status) {
+  //     if (status == "OK") {
+  //       result = results[0];
+  //       if (result && (result.types || []).includes("street_address")) {
+  //         element.value = result.formatted_address;
+  //       } else {
+  //         element.value = "";
+  //       }
+  //     } else {
+  //       element.value = "";
+  //     }
+  //   });
+  // };
 
   // const input = document.getElementById("geocomplete");
   // setAddressFromGeocode(input);
@@ -361,7 +399,6 @@ $(document).ready(function () {
       e.stopPropagation();
       const productId = $(this).data("product-id");
       const price = parseFloat($(this).data("price"));
-      // const total = modalEl.find(".total");
       const checkout = modalEl.find(".btn-checkout");
       const el = $("#quantity_" + productId);
       cart.addProduct(productId, price);
@@ -374,7 +411,6 @@ $(document).ready(function () {
       e.stopPropagation();
       const productId = $(this).data("product-id");
       const price = parseFloat($(this).data("price"));
-      // const total = modalEl.find(".total");
       const checkout = modalEl.find(".btn-checkout");
       const el = $("#quantity_" + productId);
       cart.removeProduct(productId, price);
