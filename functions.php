@@ -149,7 +149,7 @@ function enqueue_plugin_scripts() {
 
       wp_enqueue_script('pristine-js', plugins_url('js/pristine.min.js', __FILE__), '1.1.0', false);
 
-      wp_enqueue_script('news-feed-js', plugins_url('js/news-feed.js', __FILE__), '1.1.0', false);
+      wp_enqueue_script('news-feed-js', plugins_url('js/news-feed.js', __FILE__), '1.2.0', false);
       wp_enqueue_style('news-feed-css', plugins_url('css/news-feed.css', __FILE__), '1.1.0', false);
       wp_enqueue_style('news-feed-checkout-css', plugins_url('css/news-feed-checkout.css', __FILE__), '1.1.0', false);
     }
