@@ -166,10 +166,13 @@ const saveMenuSuccess = function (menuId, cart, data) {
     total,
     fulfilment_type: fulfilmentType,
     post_title: postTitle,
-    min_time: minTime,
-    max_time: maxTime,
     payment_link_reference: paymentLinkReference,
   } = data;
+
+  const minTime = data.min_time.split(":").slice(0, 2).join(":");
+  const maxTime = data.max_time.split(":").slice(0, 2).join(":");
+  const minLabel = minTime.replace(":", "");
+  const maxLabel = maxTime.replace(":", "");
 
   const totalEl = `
     <tr class="table__row">
@@ -194,7 +197,7 @@ const saveMenuSuccess = function (menuId, cart, data) {
   const fulfilmentElements = {
     collection: `
       <label class="form__field field field__select">
-        <span class="field__text ">Collection time available from ${minTime} to ${maxTime}</span>
+        <span class="field__text ">Collection can be made between ${minLabel} and ${maxLabel}. When would you like to collect your food?</span>
         <input type="time" required class="field__input" name="collection_time" min="${minTime}" max="${maxTime}" />
       </label>
     `,
